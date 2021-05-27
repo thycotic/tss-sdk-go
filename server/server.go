@@ -25,8 +25,8 @@ type UserCredential struct {
 
 // Configuration settings for the API
 type Configuration struct {
-	Credentials                                      UserCredential
-	ServerURL, TLD, Tenant, apiPathURI, tokenPathURI string
+	Credentials                                              UserCredential
+	ServerURL, TLD, Tenant, apiPathURI, tokenPathURI, Domain string
 }
 
 // Server provides access to secrets stored in Thycotic Secret Server
@@ -131,6 +131,7 @@ func (s Server) getAccessToken() (string, error) {
 	body := strings.NewReader(url.Values{
 		"username":   {s.Credentials.Username},
 		"password":   {s.Credentials.Password},
+		"domain":     {s.Domain},
 		"grant_type": {"password"},
 	}.Encode())
 	data, _, err := handleResponse(http.Post(s.urlFor("token", ""), "application/x-www-form-urlencoded", body))
